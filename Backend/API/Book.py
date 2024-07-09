@@ -2,9 +2,11 @@ from flask_restful import Resource, fields, marshal_with, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from Database.models import db, Book
 from flask import jsonify, make_response,abort
-from API.Login import admin_required
+
 # Define request parser and fields for serialization
 Book_parser = reqparse.RequestParser()
+Book_parser.add_argument('image_path', type=str, help='Path to the book image')
+Book_parser.add_argument('pdf_path', type=str, help='Path to the book PDF')
 Book_parser.add_argument('book_name', type=str, required=True, help='Name of the book')
 Book_parser.add_argument('author_name', type=str, required=True, help='Name of the author')
 Book_parser.add_argument('date_issued', type=str, required=True, help='Date the book was issued')
@@ -15,6 +17,8 @@ Book_parser.add_argument('price', type=float, required=True, help='Price of the 
 
 Book_fields = {
     'book_id': fields.Integer,
+    'image_path': fields.String,
+    'pdf_path': fields.String,
     'book_name': fields.String,
     'author_name': fields.String,
     'date_issued': fields.String,
@@ -24,6 +28,15 @@ Book_fields = {
     'sec_id': fields.Integer
 }
 
+# Role check decorator
+def admin_required(fn):
+    @jwt_required()
+    def wrapper(*args, **kwargs):
+        role = get_jwt_identity()['role']
+        if role != 'admin':
+            return make_response(jsonify({'message': 'Admin access required'}), 403)
+        return fn(*args, **kwargs)
+    return wrapper
 
 class BookAPI(Resource):
     @jwt_required()
@@ -50,6 +63,8 @@ class BookAPI(Resource):
         args = Book_parser.parse_args()
         book = Book.query.get(book_id)
         if book:
+            book.image_path = args['image_path']
+            book.pdf_path = args['pdf_path']
             book.book_name = args['book_name']
             book.author_name = args['author_name']
             book.date_issued = args['date_issued']
@@ -59,6 +74,8 @@ class BookAPI(Resource):
             db.session.commit()
             updated_book_data = {
                 'book_id': book.book_id,
+                'image_path': book.image_path,
+                'pdf_path': book.pdf_path,
                 'book_name': book.book_name,
                 'author_name': book.author_name,
                 'date_issued': book.date_issued,
@@ -75,6 +92,8 @@ class BookAPI(Resource):
     def post(self,section_id):
         args = Book_parser.parse_args()
         new_book = Book(
+            image_path=args['image_path'],
+            pdf_path=args['pdf_path'],
             book_name=args['book_name'],
             author_name=args['author_name'],
             date_issued=args['date_issued'],
@@ -83,10 +102,14 @@ class BookAPI(Resource):
             price=args['price'],
             sec_id=section_id
         )
+        if args['image_path']=='':
+            new_book.image_path = '../assets/default.jpg'
         db.session.add(new_book)
         db.session.commit()
         new_book_data = {
             'book_id': new_book.book_id,
+            'image_path': new_book.image_path,
+            'pdf_path': new_book.pdf_path,
             'book_name': new_book.book_name,
             'author_name': new_book.author_name,
             'date_issued': new_book.date_issued,

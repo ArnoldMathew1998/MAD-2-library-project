@@ -2,7 +2,6 @@ from flask import request, jsonify, make_response
 from Database.models import User
 from flask_jwt_extended import create_access_token, current_user, jwt_required, JWTManager,get_jwt_identity
 
-
 def user_identity_lookup(user):
     if isinstance(user, User):
         return {
@@ -41,3 +40,6 @@ def admin_required(fn):
             return make_response(jsonify({'message': 'Admin access required'}), 403)
         return fn(*args, **kwargs)
     return wrapper
+
+
+

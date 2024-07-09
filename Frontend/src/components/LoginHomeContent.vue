@@ -1,7 +1,5 @@
 <template>
-    <body>
-        
-   
+    <div>
     <div class="container mt-4"> 
         <div v-for="(row, rowIndex) in chunkedCards" :key="rowIndex" class="row row-cols-1 row-cols-md-4 g-4">
             <div v-for="(card, cardIndex) in row" :key="cardIndex" class="col">
@@ -15,7 +13,7 @@
             </div>
         </div>
     </div>
-</body>
+</div>
 </template>
 
 <script>

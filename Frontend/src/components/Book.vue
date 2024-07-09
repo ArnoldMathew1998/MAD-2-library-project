@@ -38,7 +38,7 @@
       <div class="modal-content">
         <span class="close" @click="closeAddBook">&times;</span>
         <h2>Add New Book</h2>
-        <form @submit.prevent="handleBookFormSubmit">
+        <form @submit.prevent="newBook.book_id ? updateBook() : addNewBook()">
           <div class="form-group">
             <label for="book_name">Book Name</label>
             <input type="text" id="book_name" v-model="newBook.book_name" required>
@@ -111,68 +111,12 @@ export default {
     handlePDFUpload(event) {
       this.selectedPDFFile = event.target.files[0];
     },
-    async handleBookFormSubmit() {
-      let bookId = null;
-
-      if (this.newBook.book_id) {
-        bookId = await this.updateBook();
-      } else {
-        bookId = await this.addNewBook();
-      }
-
-      if (this.selectedImageFile && bookId) {
-        await this.uploadImage(bookId);
-      }
-
-      if (this.selectedPDFFile && bookId) {
-        await this.uploadPDF(bookId);
-      }
-
-      this.closeAddBook();
-    },
-    async uploadImage(bookId) {
-      const file = this.selectedImageFile;
-      const getBase64 = (file) => {
-            return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-          });
-      };
-
-      const base64 = await getBase64(file);
-      console.log(base64);
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        const uploadUrl = `http://127.0.0.1:5000/Api/Book/${bookId}/image`;
-        const requestOptions = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ image_data: base64 })
-        };
-
-        await fetch(uploadUrl, requestOptions).then(response => response.json())
-        .then(data => {console.log(data);
-        }).catch(error => {
-          console.error("There was an error uploading the image!", error);
-          alert(error);
-        });
-      }
-  
-  },
-
-
-    async uploadPDF(bookId) {
+    async uploadfile(file, type) {
       const formData = new FormData();
-      formData.append('file', this.selectedPDFFile);
-
+      formData.append('file', file);
       const token = localStorage.getItem('accessToken');
       if (token) {
-        const uploadUrl = `http://127.0.0.1:5000/Api/Book/${bookId}/pdf`;
+        const uploadUrl = 'http://127.0.0.1:5000/Api/Book/upload';
         const requestOptions = {
           method: 'POST',
           headers: {
@@ -181,19 +125,30 @@ export default {
           body: formData
         };
 
+        // Send the file to the server
+
         await fetch(uploadUrl, requestOptions)
-          .then(response => response.json())
-          .then(data => {
-            if (data.url) {
-              this.newBook.pdf_path = data.url;
+        .then(async response => response.json())
+        .then(data => {
+          if (data.path) {
+            console.log(data.path);
+            if (type==='image') {
+              this.newBook.image_path = data.path;
             }
-          })
-          .catch(error => {
-            console.error("There was an error uploading the PDF!", error);
-            alert(error);
-          });
+            if (type==='pdf') {
+              this.newBook.pdf_path = data.path;
+            }
+          } else {
+            throw new Error('Image path not received from server');
+          }
+        })
+        .catch(error => {
+            console.error("There was an error uploading the image!", error);
+            alert(error.message || 'Failed to upload image');
+        });
       }
     },
+
     closeAddBook() {
       this.showAddBookModal = false;
       this.newBook = {
@@ -263,31 +218,35 @@ export default {
       }
     },
     async addNewBook() {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        const bookUrl = `http://127.0.0.1:5000/Api/Section/${this.sectionId}/Book`;
-        const requestOptions = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(this.newBook)
-        };
-
-        return await fetch(bookUrl, requestOptions)
-          .then(async response => response.json())
-          .then(data => {
-            this.books.push(data);
-            return data.book_id;
-          })
-          .catch(error => {
-            console.error("There was an error creating the new book!", error);
-            alert(error);
-            return null;
-          });
-      }
-    },
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          if (this.selectedImageFile) {
+            await this.uploadfile(this.selectedImageFile, 'image');
+          }
+          if (this.selectedPDFFile) {
+            await this.uploadfile(this.selectedPDFFile, 'pdf');
+          }
+          const bookUrl = `http://127.0.0.1:5000/Api/Section/${this.sectionId}/Book`;
+          const requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(this.newBook)
+          };
+          await fetch(bookUrl, requestOptions)
+            .then(async response => response.json())
+            .then(data => {
+              this.books.push(data);
+              this.closeAddBook();
+            })
+            .catch(error => {
+              console.error("There was an error creating the new book!", error);
+              alert(error);
+            });
+        }
+      },
     formatDate(dateString) {
       const date = new Date(dateString);
       return date.toLocaleDateString();
@@ -301,31 +260,35 @@ export default {
       this.showAddBookModal = true;
     },
     async updateBook() {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        const bookUrl = `http://127.0.0.1:5000/Api/Book/${this.newBook.book_id}`;
-        const requestOptions = {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(this.newBook)
-        };
-
-        return await fetch(bookUrl, requestOptions)
-          .then(response => response.json())
-          .then(updatedBook => {
-            this.books.splice(this.currentBookIndex, 1, updatedBook);
-            return updatedBook.book_id;
-          })
-          .catch(error => {
-            console.error("There was an error updating the book!", error);
-            alert(error);
-            return null;
-          });
-      }
-    },
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          if (this.selectedImageFile) {
+            await this.uploadfile(this.selectedImageFile, 'image');
+          }
+          if (this.selectedPDFFile) {
+            await this.uploadfile(this.selectedPDFFile, 'pdf');
+          }
+          const bookUrl = `http://127.0.0.1:5000/Api/Book/${this.newBook.book_id}`;
+          const requestOptions = {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(this.newBook)
+          };
+          await fetch(bookUrl, requestOptions)
+            .then(response => response.json())
+            .then(updatedBook => {
+              this.books.splice(this.currentBookIndex, 1, updatedBook);
+              this.closeAddBook();
+            })
+            .catch(error => {
+              console.error("There was an error updating the book!", error);
+              alert(error);
+            });
+        }
+      },
     confirmDeleteBook(book_id) {
       if (confirm("Are you sure you want to delete this book?")) {
         this.deleteBook(book_id);

@@ -6,6 +6,8 @@ db = SQLAlchemy()
 class Book(db.Model):
     __tablename__ = 'book'
     book_id = db.Column(db.Integer, primary_key=True)
+    image_path = db.Column(db.String)
+    pdf_path = db.Column(db.String)
     book_name = db.Column(db.String, nullable=False)
     author_name = db.Column(db.String, nullable=False)
     date_issued = db.Column(db.String, nullable=False)
@@ -18,17 +20,17 @@ class Book(db.Model):
     wishlist = db.relationship('Wishlist', backref='book', cascade='all, delete-orphan', lazy=True)
     feedbacks = db.relationship('Feedback', backref='book', cascade='all, delete-orphan', lazy=True)
 
-class Book_Image(db.Model):
+""" class Book_Image(db.Model):
     __tablename__ = 'book_image'
     image_id = db.Column(db.Integer, primary_key=True)
     image_data = db.Column(db.Text)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.book_id', ondelete='CASCADE'), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.book_id', ondelete='CASCADE'), nullable=False) """
     
-class Pdf_Book(db.Model):
+""" class Pdf_Book(db.Model):
     __tablename__ = 'pdf_book'
     pdf_id = db.Column(db.Integer, primary_key=True)
     pdf_data = db.Column(db.Text)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.book_id', ondelete='CASCADE'), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.book_id', ondelete='CASCADE'), nullable=False) """
 
 class UserLog(db.Model):
     __tablename__ = 'user_log'
@@ -61,6 +63,7 @@ class BookSection(db.Model): #completed
 class User(db.Model):
     __tablename__ = 'user'
     user_id = db.Column(db.Integer, primary_key=True)
+    profile_photo = db.Column(db.Text)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=True)
     mail_id = db.Column(db.String, nullable=False, unique=True)
@@ -101,11 +104,12 @@ class User(db.Model):
             'role': self.role
         }
 
-class Profile_Photo(db.Model):
+
+""" class Profile_Photo(db.Model):
     __tablename__ = 'profile_photo'
     image_id = db.Column(db.Integer, primary_key=True)
     image_data = db.Column(db.Text)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False) """
     
 
 class Feedback(db.Model):
