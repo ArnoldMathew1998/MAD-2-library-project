@@ -3,7 +3,7 @@
       <div class="container mt-6">
         <div v-for="(row, rowIndex) in chunkedBooks" :key="rowIndex" class="row row-cols-1 row-cols-md-6 g-4">
           <div v-for="(book, bookIndex) in row" :key="bookIndex" class="col">
-            <div class="card">
+            <div class="card clickable" @click="viewBook(book.book_id)">
               <img :src="book.image_path" class="card-img-top book-image" :alt="book.book_name" />
               <div class="card-body">
                 <h5 class="card-title">Book Name:</h5>
@@ -37,6 +37,9 @@
       }
     },
     methods: {
+      viewBook(book_id) {
+      this.$router.push({ name: 'Product', params: { book_id: book_id } });
+    },
       async fetchBooks() {
         const token = localStorage.getItem('accessToken');
         if (token) {
@@ -81,5 +84,8 @@
     height: 104px;
     object-fit: cover; /* Ensures the image covers the entire area without distortion */
   }
+  .clickable {
+  cursor: pointer;
+}
   </style>
   

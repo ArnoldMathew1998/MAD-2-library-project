@@ -1,65 +1,59 @@
 <template>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-sm-top">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
-                    data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <form class="me-3">
-                        <div class="form-white input-group" style="width: 250px;">
-                            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                                aria-describedby="search-addon" />
-                        </div>
-                    </form>
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link px-3" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3" href="#">Section</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3" href="#">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3" href="#">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <i class="bi bi-heart" style="font-size: 2rem; color: white;"></i>
-                            <i class="bi bi-heart-fill" style="font-size: 2rem; color: white;"></i>
-                        </li>
-                        <li class="nav-item">
-                            <i class="bi bi-cart px-3" style="font-size: 2rem; color: white;"></i>
-                        </li>
-                    </ul>
-
-                    <img src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg" class="rounded-circle" height="40"
-                        alt="" loading="lazy" />
-                </div>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+       
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+            <span></span>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <RouterLink to="/LoginHome" class="nav-link active" aria-current="page">Home</RouterLink>
+                    
+                </li>
+                <li class="nav-item">
+                    <RouterLink to="/Section" class="nav-link active" aria-current="page">Section</RouterLink>
+                </li>
+                <li class="nav-item">
+                    <RouterLink to="/LoginHome" class="nav-link active" aria-current="page">My Order</RouterLink>
+                </li>
+                <li class="nav-item">
+                    <RouterLink to="/LoginHome" class="nav-link active" aria-current="page">Contact</RouterLink>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <RouterLink to="/LoginHome" class="icon" aria-current="page"><i class="bi bi-heart"></i></RouterLink>
+                <RouterLink to="/LoginHome" class="icon" aria-current="page"><i class="bi bi-cart"></i></RouterLink>
+                <RouterLink to="/Profile" class="profile-icon" aria-current="page">A</RouterLink>                
             </div>
-        </nav>
-    </header>
+        </div>
+    </div>
+</nav>
 </template>
 
 <style scoped>
-        .form-white.input-group > .form-control:focus {
-            border-color: #fff;
-            box-shadow: inset 0 0 0 1px #fff;
+.navbar-custom {
+            background-color: #ffca6fb3; /* Light yellow color */
         }
-
-        .navbar-dark .navbar-nav .nav-link {
-            color: #fff;
+        .navbar-nav .nav-link {
+            color: black;
+            font-weight: bold;
         }
-
-        .navbar-dark .navbar-nav .nav-link:hover,
-        .navbar-dark .navbar-nav .nav-link:focus {
-            color: rgba(255, 255, 255, 0.75);
+        .navbar-nav .nav-link:hover {
+            color: black;
         }
-
-        .navbar {
-            margin-bottom: 20px; /* Add margin below navbar */
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: black;
         }
-    </style>
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+</style>

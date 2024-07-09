@@ -85,7 +85,7 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    @staticmethod
+    @staticmethod 
     def create_initial_admin():
         if User.query.filter_by(role='admin').count() == 0:
             initial_admin = User(

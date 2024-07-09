@@ -5,6 +5,8 @@ import SignInView from '../views/SignInView.vue'
 import LoginHome from '../views/LoginHomeView.vue'
 import Section from '../views/SectionView.vue'
 import Book from '../views/BookView.vue'
+import Product from '../views/ProductView.vue'
+import Profile from '../views/ProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,7 +43,21 @@ const router = createRouter({
       name: 'Book',
       component: Book,
       props: true, 
-      /* meta: { requiresAuth: true }  */
+      meta: { requiresAuth: true } 
+    },
+    {
+      path: '/Book/:book_id/Product',
+      name: 'Product',
+      component: Product,
+      props: true, 
+      meta: { requiresAuth: true } 
+    },
+    {
+      path: '/Profile',
+      name: 'Profile',
+      component: Profile,
+      props: true, 
+      meta: { requiresAuth: true } 
     }
   ]
 })

@@ -1,8 +1,8 @@
 <script setup>
 import LoginNav from '../components/LoginNAV.vue'
-import Product from '../components/Product.vue'
+import Profile from '../components/Profile.vue'
 import Footer from '../components/Footer.vue'
-import Review from '../components/Review.vue'
+
 </script>
 
 <template>
@@ -10,8 +10,7 @@ import Review from '../components/Review.vue'
     <LoginNav/>
     <div class="wrapper">
         <div class="content">
-            <Product/>
-            <Review/>
+            <Profile/>
         </div>
         <Footer/>
     </div>

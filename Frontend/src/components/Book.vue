@@ -252,7 +252,7 @@ export default {
       return date.toLocaleDateString();
     },
     viewBook(book_id) {
-      console.log(`View book with ID: ${book_id}`);
+      this.$router.push({ name: 'Product', params: { book_id: book_id } });
     },
     async editBook(book, index) {
       this.newBook = { ...book };
