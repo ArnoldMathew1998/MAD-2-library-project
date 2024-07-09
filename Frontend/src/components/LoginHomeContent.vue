@@ -1,119 +1,85 @@
 <template>
     <div>
-    <div class="container mt-4"> 
-        <div v-for="(row, rowIndex) in chunkedCards" :key="rowIndex" class="row row-cols-1 row-cols-md-4 g-4">
-            <div v-for="(card, cardIndex) in row" :key="cardIndex" class="col">
-                <div class="card">
-                    <img :src="card.imgSrc" class="card-img-top" :alt="card.altText" />
-                    <div class="card-body">
-                        <h5 class="card-title">{{ card.title }}</h5>
-                        <p class="card-text">{{ card.price }}</p>
-                    </div>
-                </div>
+      <div class="container mt-6">
+        <div v-for="(row, rowIndex) in chunkedBooks" :key="rowIndex" class="row row-cols-1 row-cols-md-6 g-4">
+          <div v-for="(book, bookIndex) in row" :key="bookIndex" class="col">
+            <div class="card">
+              <img :src="book.image_path" class="card-img-top book-image" :alt="book.book_name" />
+              <div class="card-body">
+                <h5 class="card-title">Book Name:</h5>
+                <p class="card-text">{{ book.book_name }}</p>
+                <h5 class="card-title">Price</h5>
+                <p class="card-text">{{ book.price }}₹</p>
+                
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-</template>
-
-<script>
-export default {
+  </template>
+  
+  <script>
+  export default {
     data() {
-        return {
-            cards: [
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp",
-                    altText: "Hollywood Sign on The Hill",
-                    title: "Book Name",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/042.webp",
-                    altText: "Palm Springs Road",
-                    title: "Card title",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp",
-                    altText: "Los Angeles Skyscrapers",
-                    title: "Card title",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/044.webp",
-                    altText: "Skyscrapers",
-                    title: "Card title",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp",
-                    altText: "Hollywood Sign on The Hill",
-                    title: "Book Name",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/042.webp",
-                    altText: "Palm Springs Road",
-                    title: "Card title",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp",
-                    altText: "Los Angeles Skyscrapers",
-                    title: "Card title",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/044.webp",
-                    altText: "Skyscrapers",
-                    title: "Card title",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp",
-                    altText: "Hollywood Sign on The Hill",
-                    title: "Book Name",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/042.webp",
-                    altText: "Palm Springs Road",
-                    title: "Card title",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/043.webp",
-                    altText: "Los Angeles Skyscrapers",
-                    title: "Card title",
-                    price: "Rs.2,000"
-                },
-                {
-                    imgSrc: "https://mdbcdn.b-cdn.net/img/new/standard/city/044.webp",
-                    altText: "Skyscrapers",
-                    title: "Card title",
-                    price: "Rs.2,000"
-                },
-            ]
-        };
+      return {
+        books: []
+      };
     },
     computed: {
-        chunkedCards() {
-            const chunkSize = 4;
-            let chunks = [];
-            for (let i = 0; i < this.cards.length; i += chunkSize) {
-                chunks.push(this.cards.slice(i, i + chunkSize));
-            }
-            return chunks;
+      chunkedBooks() {
+        const chunkSize = 6;
+        let chunks = [];
+        for (let i = 0; i < this.books.length; i += chunkSize) {
+          chunks.push(this.books.slice(i, i + chunkSize));
         }
+        return chunks;
+      }
+    },
+    methods: {
+      async fetchBooks() {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          const fetchUrl = `http://127.0.0.1:5000/Api/Book`;
+          const requestOptions = {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          };
+  
+          await fetch(fetchUrl, requestOptions)
+            .then(async response => {
+              if (!response.ok) {
+                return
+              }
+              const data = await response.json();
+              this.books = data;
+            })
+            .catch(error => {
+              console.error("There was an error fetching the books!", error);
+              alert(error.message || 'Failed to fetch books');
+            });
+        }
+      }
+    },
+    mounted() {
+      this.fetchBooks();
     }
-};
-</script>
-
-<style scoped>
-.card {
+  };
+  </script>
+  
+  <style scoped>
+  .card {
     border: none; /* Remove card borders */
-}
-.card-body {
+  }
+  .card-body {
     padding: 1.25rem; /* Add padding inside card body */
-}
-</style>
+  }
+  .book-image {
+    width: 156px;
+    height: 104px;
+    object-fit: cover; /* Ensures the image covers the entire area without distortion */
+  }
+  </style>
+  

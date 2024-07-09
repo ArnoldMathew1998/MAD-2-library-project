@@ -23,13 +23,13 @@ CORS(app)
 
 scheduler = BackgroundScheduler()
 
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), '../assets')
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "C:/Users/rkoma/Mad-2 LIB Mangment/Frontend/src/assets/book_image")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-if not os.path.exists(UPLOAD_FOLDER):
+""" if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
-
+ """
 
 @app.route('/Api/Book/upload', methods=['POST'])
 def upload_image():
@@ -44,7 +44,7 @@ def upload_image():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
-        url = f"../assets/{filename}"
+        url = f"./src/assets/book_image/{filename}"
         return make_response(jsonify({'path': url}), 200)
 
     return make_response(jsonify({'error': 'Something went wrong'}), 500)

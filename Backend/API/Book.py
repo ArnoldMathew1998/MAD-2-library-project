@@ -46,7 +46,7 @@ class BookAPI(Resource):
             book = Book.query.get(book_id)
             if book:
                 return book
-            abort(404)
+            return 
         elif section_id:
             books = Book.query.filter_by(sec_id=section_id).all()
             if books:
@@ -103,7 +103,7 @@ class BookAPI(Resource):
             sec_id=section_id
         )
         if args['image_path']=='':
-            new_book.image_path = '../assets/default.jpg'
+            new_book.image_path = "./src/assets/book_image/default.jpg"
         db.session.add(new_book)
         db.session.commit()
         new_book_data = {
