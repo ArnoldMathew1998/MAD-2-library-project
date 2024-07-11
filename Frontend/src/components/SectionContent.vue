@@ -56,6 +56,7 @@
   </template>
   
   <script>
+  
   export default {
     data() {
       return {
@@ -78,6 +79,7 @@
       }
     },
     methods: {
+          
       CloseAddSection() {
         this.showAddSectionModal = false;
         this.newSection.sec_id = '';

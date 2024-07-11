@@ -44,7 +44,7 @@ def upload_image():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
-        url = f"./src/assets/book_image/{filename}"
+        url = f"{filename}"
         return make_response(jsonify({'path': url}), 200)
 
     return make_response(jsonify({'error': 'Something went wrong'}), 500)

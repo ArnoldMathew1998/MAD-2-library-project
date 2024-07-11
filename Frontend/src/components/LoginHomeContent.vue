@@ -37,6 +37,9 @@ export default {
   },
   methods: {
     resolvedImagePath(imagePath) {
+      if (imagePath == null) {
+        return
+      }
       return require(`@/assets/book_image/${imagePath}`);
     },
     viewBook(book_id) {

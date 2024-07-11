@@ -35,6 +35,7 @@ const actions = {
 
         commit("setUser", user);
         localStorage.setItem("accessToken", user.token);
+        localStorage.setItem("isAdmin", user.role);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -63,6 +64,7 @@ const actions = {
         };
         commit("setUser", user);
         localStorage.setItem("accessToken", user.token);
+        localStorage.setItem("isAdmin", user.role);
       })
       .catch((error) => {
         console.error("There was an error!", error);

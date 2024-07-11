@@ -44,19 +44,13 @@ class BookAPI(Resource):
     def get(self, book_id=None, section_id=None):
         if book_id:
             book = Book.query.get(book_id)
-            if book:
-                return book
-            return 
+            return book
         elif section_id:
             books = Book.query.filter_by(sec_id=section_id).all()
-            if books:
-                return books
-            abort(404)
+            return books
         else:
             books = Book.query.all()
-            if books:
-                return books
-            abort(404)
+            return books
 
     @admin_required
     def put(self, book_id):
@@ -103,7 +97,7 @@ class BookAPI(Resource):
             sec_id=section_id
         )
         if args['image_path']=='':
-            new_book.image_path = "./src/assets/book_image/default.jpg"
+            new_book.image_path = "default.jpg"
         db.session.add(new_book)
         db.session.commit()
         new_book_data = {
