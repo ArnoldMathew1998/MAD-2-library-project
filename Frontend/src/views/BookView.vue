@@ -1,17 +1,17 @@
 <script setup>
-import LoginNav from '../components/LoginNAV.vue'
-import Book from '../components/Book.vue'
-import Footer from '../components/Footer.vue'
+import LoginNav from "../components/LoginNav.vue";
+import Book from '../components/BookContent.vue'
+import Footer from "../components/LoginFooter.vue";
 </script>
 
 <template>
 <body>
-<LoginNav/>
+<LoginNav></LoginNav>
 <div class="wrapper">
     <div class="content">
-        <Book/>
+        <Book></Book>
     </div>
-    <Footer/>
+    <Footer></Footer>
 </div>
 </body> 
 </template>

@@ -1,17 +1,17 @@
 <script setup>
-import LoginNav from '../components/LoginNAV.vue'
-import Section from '../components/Section.vue'
-import Footer from '../components/Footer.vue'
+import LoginNav from "../components/LoginNav.vue";
+import Section from '../components/SectionContent.vue'
+import Footer from "../components/LoginFooter.vue";
 </script>
 
 <template>
 <body>
-<LoginNav/>
+<LoginNav></LoginNav>
 <div class="wrapper">
     <div class="content">
-        <Section/>
+        <Section></Section>
     </div>
-    <Footer/>
+    <Footer></Footer>
 </div>
 </body> 
 </template>

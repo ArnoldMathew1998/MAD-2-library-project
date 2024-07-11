@@ -1,15 +1,14 @@
 <script setup>
-import Homenav from '../components/Homenav.vue'
-import content from '../components/HomeContent.vue'
+import Content from '../components/HomeContent.vue';
+import Nav from '../components/HomeNav.vue';
 </script>
 
 <template>
-  <main>
-    <div class="home">
-      <Homenav/>
-      <content/>
-  </div>
-  </main>
+<div class="home">
+   <Nav></Nav>
+    <Content/>
+</div>
+  
 </template>
 
 <style scoped>
@@ -17,7 +16,7 @@ import content from '../components/HomeContent.vue'
   width: 100%;
   position: relative;
   background: linear-gradient(90deg, #b2cbcf, #b5cacd 52%, #edb294);
-  height: 1024px;
+  height: 100vh;
   align-items: center;
   justify-content: flex-start;
   gap: 128px;

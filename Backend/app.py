@@ -63,10 +63,10 @@ def upload_image():
 api.add_resource(Userapi.UserAPI, '/Api/user', '/Api/user/<int:user_id>','/Api/user/<string:Username>')
 api.add_resource(Book_section.BookSectionAPI, '/Api/Section', '/Api/Section/<int:sec_id>')
 api.add_resource(Book.BookAPI, '/Api/Book', '/Api/Book/<int:book_id>','/Api/Section/<int:section_id>/Book')
-""" api.add_resource(Book_image.Book_Image_api, '/Api/Book/<int:book_id>/image', methods=['GET', 'POST', 'PUT']) """
+
 
 app.add_url_rule('/login', 'login', Login.login, methods=['POST'])
-app.add_url_rule('/Api/user/role', 'user_role', Login.get_user_role, methods=['GET'])
+
 
 @jwt.user_identity_loader
 def user_identity_lookup(user):
@@ -78,5 +78,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         User.create_initial_admin()
-
     app.run(debug=True)

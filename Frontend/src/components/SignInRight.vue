@@ -3,8 +3,17 @@
     <div class="button-parent">
       <RouterLink to="/">
         <div class="button">
-          <i class="bi bi-arrow-left-circle" style="font-size: 1.2em; color: cornflowerblue; position: relative; width: 24px; height: 24px;"></i>
-          <div class="back" style="font-size: 1.3rem; color: black;">Back</div>
+          <i
+            class="bi bi-arrow-left-circle"
+            style="
+              font-size: 1.2em;
+              color: cornflowerblue;
+              position: relative;
+              width: 24px;
+              height: 24px;
+            "
+          ></i>
+          <div class="back" style="font-size: 1.3rem; color: black">Back</div>
         </div>
       </RouterLink>
 
@@ -13,7 +22,11 @@
           <div class="already-have-an-container">
             <span class="dont-have-an">Don’t have an account?</span>
             <span class="span"></span>
-            <RouterLink to="/Registration" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Sign up</RouterLink>
+            <RouterLink
+              to="/SignUp"
+              class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Sign up</RouterLink
+            >
           </div>
         </div>
       </div>
@@ -28,11 +41,15 @@
               <div class="label">User name or email address</div>
             </div>
             <div class="input-group mb-3 text-field1">
-              <input v-model="formData.username" type="text" class="form-control">
+              <input
+                v-model="formData.username"
+                type="text"
+                class="form-control"
+              />
             </div>
           </div>
         </div>
-        
+
         <div class="text-field-wrapper">
           <div class="text-field">
             <div class="label-parent">
@@ -40,24 +57,36 @@
               <div class="password-hide-see1">
                 <i v-if="hide" class="bi bi-eye-slash icon"></i>
                 <i v-else class="bi bi-eye icon"></i>
-                <div @click="toggleHide" class="hide" style="cursor: pointer;">Hide</div>
+                <div @click="toggleHide" class="hide" style="cursor: pointer">
+                  Hide
+                </div>
               </div>
             </div>
             <div class="input-group mb-3 text-field1">
-              <input :type="inputType" v-model="formData.password" class="form-control">
+              <input
+                :type="inputType"
+                v-model="formData.password"
+                class="form-control"
+              />
             </div>
           </div>
         </div>
 
         <div class="button-group">
-          <button type="button" class="btn btn-dark btn-lg" @click="signIn">Sign in</button>
+          <button type="button" class="btn btn-dark btn-lg" @click="signIn">
+            Sign in
+          </button>
         </div>
 
         <div class="have-an-account-login1">
           <div class="already-have-an-container1" id="alreadyHaveAn">
             <span class="dont-have-an">Don’t have an account?</span>
             <span class="span"></span>
-            <RouterLink to="/Registration" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Sign up</RouterLink>
+            <RouterLink
+              to="/SignUp"
+              class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+              >Sign up</RouterLink
+            >
           </div>
         </div>
       </div>
@@ -69,45 +98,23 @@
 export default {
   data() {
     return {
-      hide: true, 
+      hide: true,
       formData: {
-        username: '',
-        password: ''
+        username: "",
+        password: "",
       },
     };
   },
   methods: {
-    // Method to toggle the hide property
     toggleHide() {
       this.hide = !this.hide;
     },
-    signIn() {
-      console.log(this.formData);
-      const loginUrl = 'http://127.0.0.1:5000/login';
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.formData)
-      };
-      
-      fetch(loginUrl, requestOptions).then(async response => {
-        const data=await response.json();
-        console.log(data);
-        if (!response.ok) {
-          const error=data.msg;
-          return Promise.reject(error);
-        }
-        return data
-      }).then(data => {
-          const accessToken = data.access_token;
-          localStorage.setItem('accessToken', accessToken);
-          this.$router.push('/LoginHome');
-      }).catch(error => {
-        console.error("There was an error!", error);
-        alert(error);
-      })
+    async signIn() {
+        await this.$store.dispatch("user/signIn", this.formData);
+       this.$router.push('/Home');
     }
   },
+    
   computed: {
     inputType() {
       return this.hide ? "password" : "text";
@@ -117,7 +124,6 @@ export default {
 </script>
 
 <style scoped>
-
 .read-with-us {
   position: relative;
   line-height: 64px;
@@ -406,5 +412,4 @@ export default {
   color: var(--color-black);
   font-family: var(--font-poppins);
 }
-
 </style>

@@ -25,7 +25,7 @@ import SignInRight from '../components/SignInRight.vue'
   font-family: var(--font-poppins);
   display: flex;
   justify-content: flex-start;
-  height: 1024px;
+  height: 100vh;
   overflow: hidden;
 }
   </style>

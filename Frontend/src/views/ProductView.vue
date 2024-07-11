@@ -1,19 +1,19 @@
 <script setup>
-import LoginNav from '../components/LoginNAV.vue'
-import Product from '../components/Product.vue'
-import Footer from '../components/Footer.vue'
-import Review from '../components/Review.vue'
+import LoginNav from "../components/LoginNav.vue";
+import Product from '../components/ProductContent.vue'
+import Footer from "../components/LoginFooter.vue";
+import Review from '../components/ReviewContent.vue'
 </script>
 
 <template>
     <body>
-    <LoginNav/>
+    <LoginNav></LoginNav>
     <div class="wrapper">
         <div class="content">
-            <Product/>
-            <Review/>
+            <Product></Product>
+            <Review></Review>
         </div>
-        <Footer/>
+        <Footer></Footer>
     </div>
     </body> 
     </template>

@@ -1,91 +1,67 @@
 <template>
-    <div>
-      <div class="container mt-6">
-        <div v-for="(row, rowIndex) in chunkedBooks" :key="rowIndex" class="row row-cols-1 row-cols-md-6 g-4">
-          <div v-for="(book, bookIndex) in row" :key="bookIndex" class="col">
-            <div class="card clickable" @click="viewBook(book.book_id)">
-              <img :src="book.image_path" class="card-img-top book-image" :alt="book.book_name" />
-              <div class="card-body">
-                <h5 class="card-title">Book Name:</h5>
-                <p class="card-text">{{ book.book_name }}</p>
-                <h5 class="card-title">Price</h5>
-                <p class="card-text">{{ book.price }}₹</p>
-                
-              </div>
+  <div>
+    <div class="container mt-6">
+      <div
+        v-for="(row, rowIndex) in chunkedBooks"
+        :key="rowIndex"
+        class="row row-cols-1 row-cols-md-6 g-4"
+      >
+        <div v-for="(book, bookIndex) in row" :key="bookIndex" class="col">
+          <div class="card clickable" @click="viewBook(book.book_id)">
+            <img
+              :src="resolvedImagePath(book.image_path)"
+              class="img-card"
+              :alt="book.book_name"
+            />
+            <div class="card-body">
+              <h4 class="card-title">{{ book.book_name }}</h4>
+              <p >Price:₹{{ book.price }}</p>
+              <p class="card-text">{{ book.content }}</p>
             </div>
+            <button type="button" class="btn btn-light btn-md">Add to Cart</button>
           </div>
+          
         </div>
       </div>
     </div>
-  </template>
+  </div>
   
-  <script>
-  export default {
-    data() {
-      return {
-        books: []
-      };
+</template>
+
+<script>
+export default {
+  computed: {
+    chunkedBooks() {
+      return this.$store.getters['books/chunkedBooks'];
     },
-    computed: {
-      chunkedBooks() {
-        const chunkSize = 6;
-        let chunks = [];
-        for (let i = 0; i < this.books.length; i += chunkSize) {
-          chunks.push(this.books.slice(i, i + chunkSize));
-        }
-        return chunks;
-      }
+  },
+  methods: {
+    resolvedImagePath(imagePath) {
+      return require(`@/assets/book_image/${imagePath}`);
     },
-    methods: {
-      viewBook(book_id) {
+    viewBook(book_id) {
       this.$router.push({ name: 'Product', params: { book_id: book_id } });
     },
-      async fetchBooks() {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-          const fetchUrl = `http://127.0.0.1:5000/Api/Book`;
-          const requestOptions = {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          };
-  
-          await fetch(fetchUrl, requestOptions)
-            .then(async response => {
-              if (!response.ok) {
-                return
-              }
-              const data = await response.json();
-              this.books = data;
-            })
-            .catch(error => {
-              console.error("There was an error fetching the books!", error);
-              alert(error.message || 'Failed to fetch books');
-            });
-        }
-      }
+    fetchBooks() {
+      this.$store.dispatch('books/fetchBooks');
     },
-    mounted() {
-      this.fetchBooks();
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .card {
-    border: none; /* Remove card borders */
-  }
-  .card-body {
-    padding: 1.25rem; /* Add padding inside card body */
-  }
-  .book-image {
-    width: 156px;
-    height: 104px;
-    object-fit: cover; /* Ensures the image covers the entire area without distortion */
-  }
-  .clickable {
+  },
+  mounted() {
+    this.fetchBooks();
+  },
+};
+</script>
+
+<style scoped>
+
+.card-body {
+  padding: 1.25rem; 
+}
+
+.clickable {
   cursor: pointer;
 }
-  </style>
-  
+.card:hover {
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+</style>

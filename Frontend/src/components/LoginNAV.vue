@@ -3,26 +3,32 @@
     <div class="container-fluid">
        
         <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <span></span>
+            
+            <div class="d-flex">
+                <RouterLink to="/Profile" class="profile-icon" aria-current="page">A</RouterLink>
+            </div>
+            
+                
+            
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <RouterLink to="/LoginHome" class="nav-link active" aria-current="page">Home</RouterLink>
+                    <RouterLink to="/Home" class="nav-link active" aria-current="page"><i class="bi bi-house">Home</i></RouterLink>
                     
                 </li>
                 <li class="nav-item">
-                    <RouterLink to="/Section" class="nav-link active" aria-current="page">Section</RouterLink>
+                    <RouterLink to="/Section" class="nav-link active" aria-current="page"><i class="bi bi-journal-album">Section</i></RouterLink>
                 </li>
                 <li class="nav-item">
-                    <RouterLink to="/LoginHome" class="nav-link active" aria-current="page">My Order</RouterLink>
+                    <RouterLink to="/Home" class="nav-link active" aria-current="page"><i class="bi bi-book">My Books</i></RouterLink>
                 </li>
                 <li class="nav-item">
-                    <RouterLink to="/LoginHome" class="nav-link active" aria-current="page">Contact</RouterLink>
+                    <RouterLink to="/Home" class="nav-link active" aria-current="page"><i class="bi bi-cart">Cart</i></RouterLink>
                 </li>
+                <li><RouterLink to="/Home" class="nav-link active" aria-current="page"><i class="bi bi-heart">Wishlist</i></RouterLink></li>
+                <li></li>
             </ul>
-            <div class="d-flex">
-                <RouterLink to="/LoginHome" class="icon" aria-current="page"><i class="bi bi-heart"></i></RouterLink>
-                <RouterLink to="/LoginHome" class="icon" aria-current="page"><i class="bi bi-cart"></i></RouterLink>
-                <RouterLink to="/Profile" class="profile-icon" aria-current="page">A</RouterLink>                
+            <div>
+                <RouterLink to="/SignIn" class="nav-link" aria-current="page"><i class="bi bi-box-arrow-right">Sign out</i></RouterLink>
             </div>
         </div>
     </div>

@@ -1,18 +1,18 @@
 <script setup>
-import LoginNav from '../components/LoginNAV.vue'
-import Profile from '../components/Profile.vue'
-import Footer from '../components/Footer.vue'
+import LoginNav from "../components/LoginNav.vue";
+import Profile from '../components/ProfileContent.vue'
+import Footer from "../components/LoginFooter.vue";
 
 </script>
 
 <template>
     <body>
-    <LoginNav/>
+    <LoginNav></LoginNav>
     <div class="wrapper">
         <div class="content">
-            <Profile/>
+            <Profile></Profile>
         </div>
-        <Footer/>
+        <Footer></Footer>
     </div>
     </body> 
     </template>

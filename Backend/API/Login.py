@@ -1,4 +1,4 @@
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response,abort
 from Database.models import User
 from flask_jwt_extended import create_access_token, current_user, jwt_required, JWTManager,get_jwt_identity
 
@@ -14,12 +14,7 @@ def user_identity_lookup(user):
             'role': user.get('role')
         }
     return user
-
-@jwt_required()
-def get_user_role():
-    identity = get_jwt_identity()['role']
-    return make_response(jsonify(role=identity), 200)
-    
+   
 
 def login():
     username = request.json.get("username", None)
@@ -27,10 +22,10 @@ def login():
 
     user = User.query.filter_by(mail_id=username).one_or_none()
     if not user or not user.check_password(password):
-        return make_response(jsonify({"msg": "Wrong username or password"}), 401)
+        abort(401)
 
     access_token = create_access_token(identity=user_identity_lookup(user))
-    return jsonify(access_token=access_token)
+    return jsonify({"access_token":access_token,"role":user.role})
 
 def admin_required(fn):
     @jwt_required()
