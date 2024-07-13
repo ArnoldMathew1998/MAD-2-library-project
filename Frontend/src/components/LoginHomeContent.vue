@@ -46,7 +46,8 @@ export default {
       this.$router.push({ name: 'Product', params: { book_id: book_id } });
     },
     fetchBooks() {
-      this.$store.dispatch('books/fetchBooks');
+      const fetchUrl=`http://127.0.0.1:5000/Api/Book`
+      this.$store.dispatch('books/fetchBooks',fetchUrl);
     },
   },
   mounted() {

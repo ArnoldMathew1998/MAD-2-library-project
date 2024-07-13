@@ -28,6 +28,7 @@ class UserAPI(Resource):
                 return user
             else:
                 return {'message': 'User not found'}, 404
+        
         else:
             users = User.query.all()
             return users
@@ -55,12 +56,17 @@ class UserAPI(Resource):
         db.session.commit()
 
         access_token = create_access_token(identity=new_user.get_jwt_identity())
-        response = {
-            'message': 'User added successfully',
-            'user_id': new_user.user_id,
-            'access_token': access_token
-        }
-        return make_response(jsonify(response), 201)
+        user={
+        "user_id":new_user.user_id,
+        "role":new_user.role,
+        "access_token":access_token,
+        "username":new_user.mail_id,
+        "name":new_user.first_name+" "+new_user.last_name,
+        "profile_photo":new_user.profile_photo
+
+    }
+        
+        return user
 
     @jwt_required()
     def put(self, user_id):

@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue'
-import store from '../store';
 import SignInView from '../views/SignInView.vue'
 import SignUpView from '../views/SignUpView.vue'
 import LoginHome from '../views/LoginView.vue'
@@ -66,15 +65,20 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('accessToken');
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isAuthenticated) {
-      next({ path: '/SignIn' });
+    if (!isAuthenticated) {
+      next({ name: 'SignIn' }); // Redirect to SignIn view if not authenticated
     } else {
-      next();
+      next(); // Proceed to the route
     }
   } else {
-    next();
+    // Clear localStorage if navigating to non-authenticated routes
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('user_id');
+    next(); // Proceed to non-authenticated routes
   }
 });
-
 export default router;

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify,make_response
 from flask_restful import Api
-from API import Userapi, Book_section,Login,Book
+from API import Userapi, Book_section,Login,Book,Feedback
 from Database.models import db, User
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_jwt_extended import create_access_token, current_user, jwt_required, JWTManager,get_jwt_identity
@@ -63,7 +63,7 @@ def upload_image():
 api.add_resource(Userapi.UserAPI, '/Api/user', '/Api/user/<int:user_id>','/Api/user/<string:Username>')
 api.add_resource(Book_section.BookSectionAPI, '/Api/Section', '/Api/Section/<int:sec_id>')
 api.add_resource(Book.BookAPI, '/Api/Book', '/Api/Book/<int:book_id>','/Api/Section/<int:section_id>/Book')
-
+api.add_resource(Feedback.FeedbackAPI, '/Api/Feedback', '/Api/Book/<int:book_id>/Feedback', '/Api/User/<int:user_id>/Feedback', '/Api/Feedback/<int:book_id>/<int:user_id>')
 
 app.add_url_rule('/login', 'login', Login.login, methods=['POST'])
 

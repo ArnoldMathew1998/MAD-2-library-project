@@ -225,7 +225,8 @@ export default {
       }
     },
     async fetchBooks() {
-      await this.$store.dispatch("books/fetchBooks", this.sectionId);
+      const fetchUrl=`http://127.0.0.1:5000/Api/Section/${this.sectionId}/Book`
+      await this.$store.dispatch("books/fetchBooks", fetchUrl);
     },
   },
   async mounted() {

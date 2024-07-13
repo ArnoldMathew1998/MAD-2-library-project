@@ -165,7 +165,10 @@ export default {
           mail_id: this.email,
           password: this.inputValue,
         };
-        await this.$store.dispatch("user/signUp", userData);
+        await this.$store.dispatch("user/SignUp", userData);
+        if (this.$store.state.user.status === "success") {
+          this.$router.push('/Login');
+        }
         this.$router.push('/Home');
       }
       else {

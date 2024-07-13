@@ -23,13 +23,9 @@ const mutations = {
 };
 
 const actions = {
-  async fetchBooks({ commit }, sectionId = null) {
+  async fetchBooks({ commit }, fetchUrl) {
     const token = localStorage.getItem("accessToken");
     if (token) {
-      const fetchUrl = sectionId
-        ? `http://127.0.0.1:5000/Api/Section/${sectionId}/Book`
-        : `http://127.0.0.1:5000/Api/Book`;
-
       const requestOptions = {
         method: "GET",
         headers: {

@@ -25,7 +25,16 @@ def login():
         abort(401)
 
     access_token = create_access_token(identity=user_identity_lookup(user))
-    return jsonify({"access_token":access_token,"role":user.role})
+    user={
+        "user_id":user.user_id,
+        "role":user.role,
+        "access_token":access_token,
+        "username":user.mail_id,
+        "name":user.first_name+" "+user.last_name,
+        "profile_photo":user.profile_photo
+
+    }
+    return user
 
 def admin_required(fn):
     @jwt_required()
