@@ -2,7 +2,7 @@ from flask_restful import Resource, fields, marshal_with, reqparse
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from Database.models import db, User
 from flask import jsonify, make_response
-
+from Database.cache import cache
 user_output = {
     'user_id': fields.Integer,
     'profile_photo': fields.String,
@@ -13,21 +13,22 @@ user_output = {
 }
 
 class UserAPI(Resource):
-    @marshal_with(user_output)
     @jwt_required()
+    @cache.cached()
+    @marshal_with(user_output)
     def get(self, user_id=None, mail_id=None):
         if user_id:
             user = User.query.get(user_id)
             if user:
                 return user
             else:
-                return {'message': 'User not found'}, 404
+                return make_response(jsonify({'message': 'User not found'}), 404)
         elif mail_id:
             user = User.query.filter_by(mail_id=mail_id).first()
             if user:
                 return user
             else:
-                return {'message': 'User not found'}, 404
+                return make_response(jsonify({'message': 'User not found'}), 404)
         
         else:
             users = User.query.all()
@@ -54,6 +55,7 @@ class UserAPI(Resource):
 
         db.session.add(new_user)
         db.session.commit()
+        cache.clear()
 
         access_token = create_access_token(identity=new_user.get_jwt_identity())
         user={
@@ -75,26 +77,33 @@ class UserAPI(Resource):
         current_user_role = current_user['role']
         
         if current_user_id != user_id and current_user_role != 'admin':
-            return {'message': 'Unauthorized: You can only update your own profile or you must be an admin'}, 401
-
+            return make_response(jsonify({'message': 'Unauthorized: You can only update your own profile or you must be an admin'}), 401)
+        
+        
         parser = reqparse.RequestParser()
         parser.add_argument('first_name', type=str, required=False, help='First name of the user')
         parser.add_argument('last_name', type=str, required=False, help='Last name of the user')
         parser.add_argument('profile_photo', type=str, required=False, help='Base64-encoded image data')
+        parser.add_argument('profile_photo_url', type=str, required=False, help='confirm to delete photo')
         parser.add_argument('mail_id', type=str, required=False, help='Mail ID of the user')
         parser.add_argument('password', type=str, required=False, help='Password of the user')
+        parser.add_argument('currentPassword', type=str, required=True, help='Current Password of the user')
         parser.add_argument('role', type=str, required=False, help='Role of the user')
         args = parser.parse_args()
-
+        
         user = User.query.get(user_id)
+        password = args['currentPassword']
+        
+        if not user.check_password(password):
+            return make_response(jsonify({'message': 'Unauthorized: You can only update your own profile'}), 401)
+        
+        
         if not user:
-            return {'message': 'User not found'}, 404
+            return make_response(jsonify({'message': 'User not found'}), 404)
 
         if args['role'] and current_user_role == 'admin':
             user.role = args['role']
-        elif args['role']:
-            return {'message': 'Unauthorized: Only admin can change roles'}, 401
-
+        
         if args['first_name']:
             user.first_name = args['first_name']
         if args['last_name']:
@@ -105,23 +114,35 @@ class UserAPI(Resource):
             user.password = args['password']
         if args['profile_photo']:
             user.profile_photo = args['profile_photo']
-
+        if args['profile_photo_url']=="delete":
+            user.profile_photo = None
         db.session.commit()
-        return {'message': 'User updated successfully'}, 200
+        cache.clear()
+        return make_response(jsonify({'message': 'User updated successfully'}), 200)
 
     @jwt_required()
     def delete(self, user_id):
         current_user = get_jwt_identity()
         current_user_id = current_user['user_id']
         current_user_role = current_user['role']
-        
+    
         if current_user_id != user_id and current_user_role != 'admin':
-            return {'message': 'Unauthorized: You can only delete your own profile or you must be an admin'}, 401
+            return make_response(jsonify({'message': 'Unauthorized: You can only delete your own profile or you must be an admin'}), 401)
+        
+        parser = reqparse.RequestParser()
+        parser.add_argument('currentPassword', type=str, required=True, help='Current Password of the user')
+        args = parser.parse_args()
 
         user = User.query.get(user_id)
+        
         if not user:
-            return {'message': 'User not found'}, 404
-
+            return make_response(jsonify({'message': 'User not found'}), 404)
+        
+        password = args['currentPassword']
+        if not user.check_password(password):
+            return make_response(jsonify({'message': 'Unauthorized: Incorrect password'}), 401)
+        
         db.session.delete(user)
         db.session.commit()
-        return {'message': 'User deleted successfully'}, 204
+        cache.clear()
+        return make_response(jsonify({'message': 'User deleted successfully'}), 200)

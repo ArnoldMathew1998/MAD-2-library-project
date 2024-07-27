@@ -1,43 +1,63 @@
 <template>
-    <div class="cart-dropdown" id="cartDropdown">
-    <div class="cart-item">
-        <h5>Evoshield</h5>
-        <p>Standout Backpack</p>
-        <p>Size: Large | Color: White</p>
-        <p>$76.00</p>
-    </div>
-    <div class="cart-item">
-        <h5>Evoshield</h5>
-        <p>XVT™ Luxe Fitted Batting Helmet</p>
-        <p>Size: Large | Color: White</p>
-        <p>$79.99</p>
-    </div>
-    <!-- Add more cart items as needed -->
+  <div class="wishlist-dropdown" :class="{ show: isVisible }">
+    <!-- <h4>Wishlist Items</h4> -->
+    <div v-for="item in wishlistItems" :key="item.id" class="wishlist-item">
+      <h5>{{ item.name }}</h5>
+      <p>{{ item.name }}</p>
+      <p>Content: {{ item.content }}</p>
+      <p>${{ item.price }}</p>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <button class="btn btn-outline-danger me-md-2 btn-sm" type="button" @click="removeFromWishlist(item)">Remove</button>
+  <button class="btn btn-outline-secondary btn-sm" type="button" @click="addToCart(item)">Add to Cart</button>
 </div>
+    </div>
+  </div>
 </template>
 
+<script>
+export default {
+  props: {
+    isVisible: {
+      type: Boolean,
+      default: false,
+    },
+    wishlistItems: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  methods: {
+    async removeFromWishlist(item) {
+      await this.$store.dispatch("wishlist/removewishItem", item.book_id);
+    },
+    async addToCart(item) {
+      await this.$store.dispatch("cartitem/addCartItem", item.book_id);
+      await this.$store.dispatch("wishlist/removewishItem", item.book_id);
+    },
+  },
+};
+</script>
+
 <style scoped>
-.cart-dropdown {
-            position: fixed;
-            right: 0;
-            top: 60px;
-            width: 400px;
-            max-height: 80%;
-            overflow-y: auto;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            display: none;
-            z-index: 1000;
-        }
-        .cart-dropdown.show {
-            display: block;
-        }
-        .cart-item {
-            padding: 10px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .cart-item:last-child {
-            border-bottom: none;
-        }
+.wishlist-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 250px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: none;
+  z-index: 1000;
+}
+.wishlist-dropdown.show {
+  display: block;
+}
+.wishlist-item {
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.wishlist-item:last-child {
+  border-bottom: none;
+}
 </style>

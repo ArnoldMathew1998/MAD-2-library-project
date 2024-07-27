@@ -1,14 +1,17 @@
 <script setup>
-import Content from '../components/HomeContent.vue';
-import Nav from '../components/HomeNav.vue';
+import Content from "../components/HomeContent.vue";
+import Nav from "../components/HomeNav.vue";
+import Footer from "../components/LoginFooter.vue";
 </script>
 
 <template>
-<div class="home">
-   <Nav></Nav>
-    <Content/>
-</div>
-  
+  <div>
+    <div class="home">
+      <Nav></Nav>
+      <Content></Content>
+    </div>
+    <Footer></Footer>
+  </div>
 </template>
 
 <style scoped>

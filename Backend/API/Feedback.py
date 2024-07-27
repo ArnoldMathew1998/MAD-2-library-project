@@ -4,6 +4,7 @@ from Database.models import db, Feedback
 from flask import jsonify, make_response, abort
 from datetime import datetime
 from API.Login import admin_required
+from Database.cache import cache
 
 # Define request parser and fields for serialization
 Feedback_parser = reqparse.RequestParser()
@@ -22,6 +23,7 @@ Feedback_fields = {
 
 class FeedbackAPI(Resource):
     @jwt_required()
+    @cache.cached()
     @marshal_with(Feedback_fields)
     def get(self, book_id=None, user_id=None):
         if book_id:
@@ -51,7 +53,7 @@ class FeedbackAPI(Resource):
         )
         db.session.add(new_feedback)
         db.session.commit()
-       
+        cache.clear()
        
         new_feedback_data = {
             'user_id': new_feedback.user_id,
@@ -80,7 +82,8 @@ class FeedbackAPI(Resource):
         feedback.feedback_rating = args['feedback_rating']
         
         db.session.commit()
-        
+        cache.clear()
+
         updated_feedback_data = {
             'user_id': feedback.user_id,
             'book_id': feedback.book_id,
@@ -99,7 +102,7 @@ class FeedbackAPI(Resource):
         if feedback:
             db.session.delete(feedback)
             db.session.commit()
-            
+            cache.clear()
             return jsonify({'message': 'Feedback deleted successfully'})
         else:
             return make_response(jsonify({'message': 'Feedback not found'}), 404)

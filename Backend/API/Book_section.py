@@ -1,10 +1,12 @@
 from flask_restful import Resource, fields, marshal_with, reqparse
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 from datetime import datetime
 import pytz
 from Database.models import db, BookSection
 from flask import jsonify, make_response,abort
 from API.Login import admin_required
+from Database.cache import cache
+
 # Define request parser and fields for serialization
 Book_section_parser = reqparse.RequestParser()
 Book_section_parser.add_argument('sec_name', type=str, required=True, help='Name of the book section')
@@ -19,6 +21,7 @@ Section_fields = {
 
 class BookSectionAPI(Resource):
     @jwt_required()
+    @cache.cached()
     @marshal_with(Section_fields)
     def get(self, sec_id=None):
         if sec_id:
@@ -48,11 +51,13 @@ class BookSectionAPI(Resource):
                 'description': book_section.description,
                 'date_created': book_section.date_created.strftime('%Y-%m-%d %H:%M:%S')
             }
+            cache.clear()
             return updated_section_data
         else:
             return make_response(jsonify({'message': 'Book section not found'}), 404)
 
     @admin_required
+    @marshal_with(Section_fields)
     def post(self):
         args = Book_section_parser.parse_args()
         ist = pytz.timezone('Asia/Kolkata')
@@ -65,21 +70,16 @@ class BookSectionAPI(Resource):
         )
         db.session.add(new_book_section)
         db.session.commit()
-        new_section_data = {
-        'sec_id': new_book_section.sec_id,
-        'sec_name': new_book_section.sec_name,
-        'description': new_book_section.description,
-        'date_created': new_book_section.date_created.strftime('%Y-%m-%d %H:%M:%S')}
-        
-        return new_section_data
+        cache.clear()
+        return new_book_section
 
     @admin_required
     def delete(self, sec_id):
         book_section = BookSection.query.get(sec_id)
-        print(sec_id)
         if book_section:
             db.session.delete(book_section)
             db.session.commit()
+            cache.clear()
             return make_response(jsonify({'message': 'Book section deleted successfully'}), 204)
         else:
             return make_response(jsonify({'message': 'Book section not found'}), 404)

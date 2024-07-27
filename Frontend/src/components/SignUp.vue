@@ -166,10 +166,10 @@ export default {
           password: this.inputValue,
         };
         await this.$store.dispatch("user/SignUp", userData);
-        if (this.$store.state.user.status === "success") {
-          this.$router.push('/Login');
-        }
+
         this.$router.push('/Home');
+        console.log('/Home');
+  
       }
       else {
         alert(

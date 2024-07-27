@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="sign-in1">
     <div class="button-parent">
       <RouterLink to="/">

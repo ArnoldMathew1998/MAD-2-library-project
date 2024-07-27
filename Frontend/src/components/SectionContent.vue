@@ -74,7 +74,7 @@
         return this.$store.getters['sections/allSections'];
       },
       isAdmin() {
-        return this.$store.getters['user/isAdmin'];
+        return localStorage.getItem("isAdmin") === "true";
         
       }
     },
@@ -131,6 +131,7 @@
     async mounted() {
       await this.fetchSections();
     }
+    
   };
   </script>
   

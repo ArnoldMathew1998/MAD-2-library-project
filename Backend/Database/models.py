@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
+
 db = SQLAlchemy()
 
 class Book(db.Model):
@@ -16,10 +18,10 @@ class Book(db.Model):
     price = db.Column(db.Float, nullable=False)
     sec_id = db.Column(db.Integer, db.ForeignKey('book_section.sec_id', ondelete='CASCADE'), nullable=False)
     feedbacks = db.relationship('Feedback', backref='book', cascade='all, delete-orphan', lazy=True)
-    """ user_logs = db.relationship('UserLog', backref='book', cascade='all, delete-orphan', lazy=True)
     cart = db.relationship('Cart', backref='book', cascade='all, delete-orphan', lazy=True)
-    wishlist = db.relationship('Wishlist', backref='book', cascade='all, delete-orphan', lazy=True) """
-
+    wishlist = db.relationship('Wishlist', backref='book', cascade='all, delete-orphan', lazy=True) 
+    user_logs = db.relationship('UserLog', backref='book', cascade='all, delete-orphan', lazy=True)
+    
 
 class UserLog(db.Model):
     __tablename__ = 'user_log'
@@ -28,18 +30,18 @@ class UserLog(db.Model):
     book_id = db.Column(db.Integer, db.ForeignKey('book.book_id', ondelete='CASCADE'), nullable=False)
     borrow_date = db.Column(db.DateTime, nullable=False)
     return_date = db.Column(db.DateTime, nullable=False)
+    approved = db.Column(db.Integer, nullable=False)
+
 
 class Cart(db.Model):
     __tablename__ = 'cart'
-    cart_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.book_id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False, primary_key=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.book_id', ondelete='CASCADE'), nullable=False, primary_key=True)
 
 class Wishlist(db.Model):
     __tablename__ = 'wishlist'
-    wishlist_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.book_id', ondelete='CASCADE'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False, primary_key=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.book_id', ondelete='CASCADE'), nullable=False, primary_key=True)
 
 class BookSection(db.Model):
     __tablename__ = 'book_section'
@@ -59,10 +61,10 @@ class User(db.Model):
     password_hash = db.Column(db.String, nullable=False)
     role = db.Column(db.String, nullable=False, default='user')
     feedbacks = db.relationship('Feedback', backref='user', cascade='all, delete-orphan', lazy=True)
-    """ user_logs = db.relationship('UserLog', backref='user', cascade='all, delete-orphan', lazy=True)
+    user_logs = db.relationship('UserLog', backref='user', cascade='all, delete-orphan', lazy=True)
     cart = db.relationship('Cart', backref='user', cascade='all, delete-orphan', lazy=True)
-    wishlist = db.relationship('Wishlist', backref='user', cascade='all, delete-orphan', lazy=True) """
-
+    wishlist = db.relationship('Wishlist', backref='user', cascade='all, delete-orphan', lazy=True)
+    
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')

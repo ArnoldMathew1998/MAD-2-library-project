@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="review-header">
-            <img :src="resolvedImagePath(feedback.image_path)" alt="Avatar" class="review-avatar">
+            <img :src="resolvedImagePath(feedback.profile_photo)" alt="Avatar" class="review-avatar">
             <div>
               <div class="name">{{ feedback.Name }}</div>
               <div class="text-muted">{{ feedback.Email }}</div>
@@ -17,15 +17,15 @@
           <p>{{ feedback.feedback_text }}</p>
           <div v-if="feedback.user_id == userId">
             <p v-bind="add=false" ></p>
-            <button @click="editFeedback(feedback)" class="btn btn-secondary btn-sm">Edit</button>
-            <button @click="deleteFeedback(feedback)" class="btn btn-danger btn-sm">Delete</button>
+            <button @click="editFeedback(feedback)" class="btn btn-outline-secondary me-md-2 btn-sm">Edit</button>
+            <button @click="deleteFeedback(feedback)" class="btn btn-outline-danger btn-sm">Delete</button>
           </div>
         </div>
       </div>
     </div>
 
     <div class="text-center mt-4">
-      <button v-if="add" @click="showAddReviewModal" class="btn btn-primary">Add Your Review</button>
+      <button v-if="add && !isAdmin" @click="showAddReviewModal" class="btn btn-outline-secondary">Add Your Review</button>
     </div>
 
     <AddReviewModal
@@ -55,7 +55,9 @@ export default {
     };
   },  
   computed: {
-   
+    isAdmin() {
+        return localStorage.getItem("isAdmin") === "true";
+    },
     feedbacks() {
       return this.$store.getters['feedback/feedbacks'];
     }
@@ -66,12 +68,12 @@ export default {
       await this.$store.dispatch('feedback/loadFeedbacksWithUserDetails', bookId);
       this.add='true'
     },
-    resolvedImagePath(imagePath) {
-      if (imagePath == null) {
-        return 'https://via.placeholder.com/50';
-      }
-      /* return require(`@/assets/book_image/${imagePath}`); */
-    },
+      resolvedImagePath(imagePath) {
+        if (imagePath == null) {
+          return require('@/assets/book_image/default.jpg');
+        }
+        return require(`@/assets/book_image/${imagePath}`);
+      },
    
      showAddReviewModal() {
       this.selectedFeedback = null; // Reset the selected feedback for new review

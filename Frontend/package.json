@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
+    "vue-pdf": "^1.0.0",
     "vue-router": "^4.4.0",
     "vuex": "^4.1.0"
   },
@@ -18,9 +19,15 @@
     "@babel/eslint-parser": "^7.12.16",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
+    "@vue/cli-service": "^5.0.8",
+    "compression-webpack-plugin": "^11.1.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3"
+    "eslint-plugin-vue": "^8.0.3",
+    "file-loader": "^6.2.0",
+    "vite": "^5.3.4",
+    "webpack": "^5.93.0",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^5.1.4"
   },
   "eslintConfig": {
     "root": true,

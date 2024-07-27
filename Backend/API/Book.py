@@ -2,6 +2,8 @@ from flask_restful import Resource, fields, marshal_with, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from Database.models import db, Book
 from flask import jsonify, make_response,abort
+from API.Login import admin_required
+from Database.cache import cache
 
 # Define request parser and fields for serialization
 Book_parser = reqparse.RequestParser()
@@ -28,18 +30,10 @@ Book_fields = {
     'sec_id': fields.Integer
 }
 
-# Role check decorator
-def admin_required(fn):
-    @jwt_required()
-    def wrapper(*args, **kwargs):
-        role = get_jwt_identity()['role']
-        if role != 'admin':
-            return make_response(jsonify({'message': 'Admin access required'}), 403)
-        return fn(*args, **kwargs)
-    return wrapper
 
 class BookAPI(Resource):
     @jwt_required()
+    @cache.cached()
     @marshal_with(Book_fields)
     def get(self, book_id=None, section_id=None):
         if book_id:
@@ -78,11 +72,13 @@ class BookAPI(Resource):
                 'price': book.price,
                 'sec_id': book.sec_id
             }
+            cache.clear()
             return updated_book_data
         else:
             return 
 
     @admin_required
+    @marshal_with(Book_fields)
     def post(self,section_id):
         args = Book_parser.parse_args()
         new_book = Book(
@@ -100,19 +96,8 @@ class BookAPI(Resource):
             new_book.image_path = "default.jpg"
         db.session.add(new_book)
         db.session.commit()
-        new_book_data = {
-            'book_id': new_book.book_id,
-            'image_path': new_book.image_path,
-            'pdf_path': new_book.pdf_path,
-            'book_name': new_book.book_name,
-            'author_name': new_book.author_name,
-            'date_issued': new_book.date_issued,
-            'content': new_book.content,
-            'language': new_book.language,
-            'price': new_book.price,
-            'sec_id': new_book.sec_id
-        }
-        return new_book_data
+        cache.clear()
+        return new_book
 
     @admin_required
     def delete(self, book_id):
@@ -120,6 +105,7 @@ class BookAPI(Resource):
         if book:
             db.session.delete(book)
             db.session.commit()
+            cache.clear()
             return make_response(jsonify({'message': 'Book deleted successfully'}), 204)
         else:
             return make_response(jsonify({'message': 'Book not found'}), 404)

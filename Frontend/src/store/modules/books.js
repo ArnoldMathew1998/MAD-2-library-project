@@ -49,13 +49,12 @@ const actions = {
     }
   },
 
-  async uploadfile(_, file) {
+  async uploadfile(_, {file}) {
     const formData = new FormData();
     formData.append('file', file);
-    console.log(formData.file);
     const token = localStorage.getItem('accessToken');
     if (token) {
-      const uploadUrl = 'http://127.0.0.1:5000/Api/Book/upload';
+      const uploadUrl = 'http://127.0.0.1:5000/Api/file/upload';
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -69,7 +68,6 @@ const actions = {
         .then(async response => response.json())
         .then(data => {
           if (data.path) {
-            console.log(data.path);
             return data.path;
           } else {
             throw new Error('File path not received from server');
@@ -87,11 +85,11 @@ const actions = {
     const token = localStorage.getItem('accessToken');
     if (token) {
       if (selectedImageFile) {
-        const imagePath = await dispatch('uploadfile', selectedImageFile);
+        const imagePath = await dispatch('uploadfile', {file: selectedImageFile});
         newBook.image_path = imagePath;
       }
       if (selectedPDFFile) {
-        const pdfPath = await dispatch('uploadfile',selectedPDFFile);
+        const pdfPath = await dispatch('uploadfile', {file: selectedPDFFile});
         newBook.pdf_path = pdfPath;
       }
       const bookUrl = `http://127.0.0.1:5000/Api/Section/${sectionId}/Book`;
@@ -119,17 +117,16 @@ const actions = {
     const token = localStorage.getItem('accessToken');
     if (token) {
       if (selectedImageFile) {
-        const imagePath =await dispatch('uploadfile',selectedImageFile);
+        const imagePath =await dispatch('uploadfile',{file: selectedImageFile});
         newBook.image_path = imagePath;
       }
       if (selectedPDFFile) {
-        const pdfPath = await dispatch('uploadfile',selectedPDFFile);
+        const pdfPath = await dispatch('uploadfile',{file: selectedPDFFile});
         newBook.pdf_path = pdfPath;
       }
       if (!newBook || !newBook.book_id) {
         throw new Error('Invalid book data');
       }
-     console.log(newBook);
       const bookUrl = `http://127.0.0.1:5000/Api/Book/${newBook.book_id}`;
       const requestOptions = {
         method: 'PUT',

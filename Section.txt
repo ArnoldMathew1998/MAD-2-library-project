@@ -1,0 +1,11 @@
+Section Name	             Description	
+
+Fiction	                     A collection of fictional works.	
+
+Non-Fiction	             A collection of non-fictional works.
+	
+Science	                     Books related to scientific topics.
+	
+History	                     Books on historical events and figures.
+	
+Children's Books	     Books for young readers.	

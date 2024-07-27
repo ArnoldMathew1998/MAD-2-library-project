@@ -3,7 +3,6 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <!-- <h5 class="modal-title">{{ feedback ? "Edit Review" : "Add Review" }}</h5> -->
           <button type="button" class="close" @click="close">&times;</button>
         </div>
         <div class="modal-body">
@@ -18,7 +17,7 @@
                 <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-outline-primary me-md-2 btn-sm">Submit</button>
           </form>
         </div>
       </div>
@@ -42,7 +41,6 @@ export default {
   },
   methods: {
     close() {
-      console.log("-------------------close---------------------------------");
       this.$emit('close');
     },
     submitFeedback() {
@@ -51,12 +49,6 @@ export default {
         feedback_text: this.feedbackText,
         feedback_rating: this.feedbackRating
       };
-
-      // If editing, include the user_id
-      /* if (this.feedback) {
-        newFeedback.user_id = this.feedback.user_id;
-      } */
-      console.log("----------------------------------------------------");
       this.$emit('submit', newFeedback);
     }
   }

@@ -8,11 +8,10 @@ const mutations = {
   setFeedbacks(state, feedbacks) {
     state.feedbacks = feedbacks;
   },
-  async addFeedback(state, feedback) {
+  addFeedback(state, feedback) {
     feedback["Name"] = state.user["first_name"] + " " + state.user["last_name"];
     feedback["profile_photo"] = state.user["profile_photo"];
     feedback["Email"] = state.user["mail_id"];
-    console.log("feedback", feedback);
     state.userfeedbacks.push(feedback);
   },
   updateFeedback(state, updatedFeedback) {
@@ -87,7 +86,6 @@ const actions = {
   },
   async editFeedback({ commit }, feedback) {
     const token = localStorage.getItem("accessToken");
-    console.log(feedback," i am in PUT");
     if (token) {
       const feedbackUrl = `http://127.0.0.1:5000/Api/Book/${feedback.book_id}/Feedback`;
       const requestOptions = {

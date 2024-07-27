@@ -1,0 +1,7 @@
+Book Name	                               Date Issued	Author Name	              Section	
+
+The Great Gatsby	                       2023-06-01	F. Scott Fitzgerald	      Fiction	
+Sapiens	                                       2023-06-15	Yuval Noah Harari	      Non-Fiction	
+A Brief History of Time	                       2023-07-01	Stephen Hawking	              Science	
+1776	                                       2023-07-10	David McCullough	      History	
+Harry Potter and the Sorcerer's Stone	       2023-07-20	J.K. Rowling	              Children's Books	
