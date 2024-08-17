@@ -66,14 +66,14 @@ const routes = [
     name: 'MyBooks',
     component: MyBooks,
     props: true,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true},
   },
   {
     path: '/checkout',
     name: 'checkout',
     component: Checkout,
     props: true,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresUser: true },
   },
   {
     path: '/search',
@@ -85,9 +85,8 @@ const routes = [
     path: '/Dashboard',
     name: 'Dashboard',
     component: Dashboard,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
- 
 ];
 
 const router = createRouter({
@@ -96,20 +95,22 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('accessToken');
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-  const isAuthenticated = localStorage.getItem('accessToken');
-
-  /* console.log('isAuthenticated:', isAuthenticated); // Debugging log */
-  console.log('Navigating to:', to.name); // Debugging log
-
+  // Check if the route requires authentication
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!isAuthenticated) {
       next({ name: 'SignIn' }); // Redirect to SignIn view if not authenticated
+    } else if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin) {
+      next({ name: 'LoginHome' }); // Redirect to Home if user is not an admin but accessing admin route
+    } else if (to.matched.some(record => record.meta.requiresUser) && isAdmin) {
+      next({ name: 'LoginHome' }); // Redirect to Home if admin tries to access user route
     } else {
       next(); // Proceed to the route
     }
   } else {
-    next();
+    next(); // Proceed to the route
   }
 });
 
