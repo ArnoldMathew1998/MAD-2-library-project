@@ -10,8 +10,8 @@ We are currently enhancing our recommendation system by integrating:
 As these improvements are still in progress, **you may encounter some errors or inconsistencies** while using the project.  
 
 ### 📅 Timeline  
-- **Improvement Started:** 14th February 2025  
-- **Expected Completion:** Within the next few months  
+- **Improvement Started:** 2025  
+- **Expected Completion:**  
 
 ### 🛠 Contribution & Issues  
 If you experience any issues or have suggestions, feel free to open an issue or contribute to the project! Your feedback is valuable in making this library better.  
