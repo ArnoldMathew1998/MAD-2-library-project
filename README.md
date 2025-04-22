@@ -1,4 +1,3 @@
-```markdown
 # 📚 MAD-2 Library Management System
 
 This project is a full-stack library management system built using **Flask (Python)** for the backend and **Vue.js** for the frontend. It includes features like user authentication, book management, feedback, wishlist, cart system, background tasks using **Celery**, and email testing with **MailHog**.
