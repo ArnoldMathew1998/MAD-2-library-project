@@ -10,7 +10,6 @@ import flask_excel as excel
 from celery import Celery
 from celery.schedules import crontab
 
-
 app = Flask(__name__, static_url_path='/static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -119,4 +118,4 @@ if __name__ == '__main__':
         User.create_initial_admin()
         
         
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
